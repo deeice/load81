@@ -5,9 +5,15 @@
 
 /* ================================ Defaults ================================ */
 
+#ifdef ZIPIT_Z2
+#define DEFAULT_WIDTH 320
+#define DEFAULT_HEIGHT 240
+#define DEFAULT_BPP 24
+#else
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 600
 #define DEFAULT_BPP 24
+#endif /* ZIPIT_Z2 */
 
 /* ============================= Data structures ============================ */
 

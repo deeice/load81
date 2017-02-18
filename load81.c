@@ -768,7 +768,11 @@ int main(int argc, char **argv) {
     parseOptions(argc,argv);
     initScreen();
     initJoysticks(l81.fb);
+#ifdef ZIPIT_Z2
+    initEditor(l81.fb,2*FONT_HEIGHT,0,3*FONT_KERNING,0);
+#else
     initEditor(l81.fb,30,30,30,30);
+#endif
     editorOpen(l81.filename);
     while(1) {
         resetProgram();

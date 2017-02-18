@@ -429,6 +429,26 @@ void editorDrawChars(void) {
         bfWriteString(E.fb,E.margin_left,10,E.err,strlen(E.err),0,0,0,255);
 }
 
+#ifdef ZIPIT_Z2
+void editorDrawPowerOff(int x, int y) {
+    int i = FONT_HEIGHT-2;
+    x += FONT_KERNING+2;
+    y += 2;
+    drawEllipse(E.fb,x,y,i,i,66,66,231,255,1);
+    drawEllipse(E.fb,x,y,i-4,i-4,165,165,255,255,1);
+    drawBox(E.fb,x-4,y,x+4,y+i-1,165,165,255,255,1);
+    drawBox(E.fb,x-2,y,x+2,y+i+1,66,66,231,255,1);
+}
+
+void editorDrawSaveIcon(int x, int y) {
+    int i = FONT_HEIGHT-2;
+    x += 1;
+    y += 3;
+    drawBox(E.fb,x-i,y-i,x+i,y+i,66,66,231,255,1);
+    drawBox(E.fb,x-1,y+i/2+1,x+1,y+i-1,165,165,255,255,1);
+    drawEllipse(E.fb,x,y,4,4,165,165,255,255,1);
+}
+#else
 void editorDrawPowerOff(int x, int y) {
     drawEllipse(E.fb,x,y,12,12,66,66,231,255,1);
     drawEllipse(E.fb,x,y,7,7,165,165,255,255,1);
@@ -441,6 +461,7 @@ void editorDrawSaveIcon(int x, int y) {
     drawBox(E.fb,x-1,y+7,x+1,y+11,165,165,255,255,1);
     drawEllipse(E.fb,x,y,4,4,165,165,255,255,1);
 }
+#endif  /* ZIPIT_Z2 */
 
 void editorDraw() {
     drawBox(E.fb,0,0,E.fb->width-1,E.fb->height-1,165,165,255,255,1);
@@ -455,8 +476,14 @@ void editorDraw() {
     editorDrawPowerOff(POWEROFF_BUTTON_X,POWEROFF_BUTTON_Y);
     if (E.dirty) editorDrawSaveIcon(SAVE_BUTTON_X,SAVE_BUTTON_Y);
     /* Show info about the current file */
+#ifdef ZIPIT_Z2
+    bfWriteString(E.fb,E.margin_left,E.fb->height-E.margin_top+4,
+		  basename(E.filename),
+		  strlen(basename(E.filename)), 255,255,255,255);
+#else
     bfWriteString(E.fb,E.margin_left,E.fb->height-E.margin_top+4,E.filename,
         strlen(E.filename), 255,255,255,255);
+#endif /* ZIPIT_Z2 */
 }
 
 /* ========================= Editor events handling  ======================== */
@@ -669,6 +696,10 @@ int editorEvents(void) {
             ksym = event.key.keysym.sym;
             switch(ksym) {
             case SDLK_ESCAPE:
+#ifdef  ZIPIT_Z2
+		if (E.modifiers & CTRL_MASK)
+		    exit(1); /* Use CTRL-ESC to quit on zipit. */
+#endif		
                 return 1;
                 break;
             default:
@@ -772,6 +803,14 @@ int editorEvents(void) {
                 for (i = 0; i < 4; i++)
                     editorInsertChar(' ');
                 break;
+#ifdef ZIPIT_Z2
+            case SDLK_s: /* Use CTRL-X or CTRL-S to save on zipit. */
+            case SDLK_x:
+		if (E.modifiers & CTRL_MASK) {
+		    if (editorSave(E.filename) == 0) E.dirty = 0;
+		    break;
+		}
+#endif
             default:
                 editorInsertChar(E.key[j].translation);
                 /* Avoid repetition for special characters. */

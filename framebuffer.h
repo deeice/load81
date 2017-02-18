@@ -10,9 +10,18 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+#ifdef ZIPIT_Z2
+#define FONT_WIDTH 16
+#define FONT_HEIGHT 12
+#define FONT_KERNING 8
+// HEIGHT is height of chars in the 16x16 cells of bitfont.h
+// KERNING is really char width
+// Gotta fix the 3 bf fns below to go with smaller font.
+#else
 #define FONT_WIDTH 16
 #define FONT_HEIGHT 16
 #define FONT_KERNING 10
+#endif  /* ZIPIT_Z2 */
 
 /* This is the maximum number of joysticks we will allow LOAD81 to deal with */
 #define MAX_JOYSTICKS 8

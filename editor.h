@@ -3,11 +3,19 @@
 
 #include "framebuffer.h"
 
+#ifdef ZIPIT_Z2
+#define POWEROFF_BUTTON_X   0
+#define POWEROFF_BUTTON_Y   (E.fb->height-16)
+#define SAVE_BUTTON_X       (E.fb->width-E.margin_right-13)
+#define SAVE_BUTTON_Y       (E.fb->height-16)
+#define EDITOR_FPS 30
+#else
 #define POWEROFF_BUTTON_X   (E.fb->width-18)
 #define POWEROFF_BUTTON_Y   18
 #define SAVE_BUTTON_X       (E.fb->width-E.margin_right-13)
 #define SAVE_BUTTON_Y       (E.fb->height-16)
 #define EDITOR_FPS 30
+#endif  /* ZIPIT_Z2 */
 
 /* Syntax highlight types */
 #define HL_NORMAL 0
